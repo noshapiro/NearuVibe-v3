@@ -77,7 +77,7 @@ export function VideoPlayer({
 
   return (
     <div className="overflow-hidden rounded-rm border border-[#1a1a1a] bg-bg1">
-      <div className="relative flex h-[190px] flex-col items-center justify-center gap-2 bg-bg2">
+      <div className="relative flex w-full flex-col items-center justify-center gap-2 bg-bg2 aspect-video">
         <div className="flex h-14 w-14 items-center justify-center rounded-full bg-bg3">
           <svg
             width={20}

@@ -2,8 +2,10 @@
 
 import { useState, useRef, useEffect } from "react";
 import { Topbar } from "../Topbar";
-import { EmotionBars } from "../ui/EmotionBars";
-import { EmotionChart } from "../ui/EmotionChart";
+import { EmotionBarsVertical } from "../ui/EmotionBarsVertical";
+import { TimelineView } from "./offline/TimelineView";
+import { EmotionGrid } from "../ui/EmotionGrid";
+import { StackedEmotionChart } from "../ui/StackedEmotionChart";
 import { VideoPlayer } from "../ui/VideoPlayer";
 import { DEMO_EMOTION_DATA } from "@/lib/data";
 import type { AnalysisStage } from "@/types";
@@ -27,6 +29,7 @@ export function OfflineAnalysis() {
   const [doneSteps, setDoneSteps] = useState<Set<number>>(new Set());
   const [currentDataIndex, setCurrentDataIndex] = useState(0);
   const [playbackTab, setPlaybackTab] = useState<"tl" | "pb">("pb");
+  const [emotionView, setEmotionView] = useState<"grid" | "bars">("grid");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -258,37 +261,75 @@ export function OfflineAnalysis() {
                 ← New Analysis
               </button>
             </div>
-            <div className="grid grid-cols-[1fr_1fr] gap-3.5">
-              <VideoPlayer
-                totalDurationSec={76}
-                demoData={DEMO_EMOTION_DATA}
-                onTimeUpdate={(dataIndex) => setCurrentDataIndex(dataIndex)}
-              />
-              <div className="rounded-rm border border-[#1a1a1a] bg-bg1 p-3.5">
-                <div className="mb-3 flex items-center justify-between">
+            {playbackTab === "tl" ? (
+              <TimelineView />
+            ) : (
+            <div className="grid grid-cols-5 gap-3">
+              <div className="col-span-3">
+                <VideoPlayer
+                  totalDurationSec={76}
+                  demoData={DEMO_EMOTION_DATA}
+                  onTimeUpdate={(dataIndex) => setCurrentDataIndex(dataIndex)}
+                />
+              </div>
+              <div className="col-span-2 rounded-rm border border-[#1a1a1a] bg-bg1 p-3.5">
+                <div className="mb-3 flex items-center justify-between gap-2">
                   <span className="text-[13px] font-semibold text-t1">
                     Current Emotions
                   </span>
-                  <span className="text-[11px] text-t3 font-mono">
-                    {(() => {
-                      const totalSec = Math.round(
-                        (currentDataIndex / Math.max(1, DEMO_EMOTION_DATA.length - 1)) * 76
-                      );
-                      const m = Math.floor(totalSec / 60);
-                      const s = totalSec % 60;
-                      return `${m}:${String(s).padStart(2, "0")}`;
-                    })()}
-                  </span>
+                  <div className="flex items-center gap-1">
+                    <span className="text-[11px] text-t3 font-mono">
+                      {(() => {
+                        const totalSec = Math.round(
+                          (currentDataIndex / Math.max(1, DEMO_EMOTION_DATA.length - 1)) * 76
+                        );
+                        const m = Math.floor(totalSec / 60);
+                        const s = totalSec % 60;
+                        return `${m}:${String(s).padStart(2, "0")}`;
+                      })()}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setEmotionView("grid")}
+                      className={`flex h-7 w-7 items-center justify-center rounded-md transition-colors hover:bg-[#222222] ${
+                        emotionView === "grid" ? "bg-bg4 text-t1" : "bg-transparent text-[#555555]"
+                      }`}
+                      aria-label="Grid view"
+                    >
+                      <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                        <rect x={3} y={3} width={7} height={7} />
+                        <rect x={14} y={3} width={7} height={7} />
+                        <rect x={3} y={14} width={7} height={7} />
+                        <rect x={14} y={14} width={7} height={7} />
+                      </svg>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setEmotionView("bars")}
+                      className={`flex h-7 w-7 items-center justify-center rounded-md transition-colors hover:bg-[#222222] ${
+                        emotionView === "bars" ? "bg-bg4 text-t1" : "bg-transparent text-[#555555]"
+                      }`}
+                      aria-label="Bars view"
+                    >
+                      <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                        <rect x={3} y={12} width={4} height={9} />
+                        <rect x={10} y={7} width={4} height={14} />
+                        <rect x={17} y={4} width={4} height={17} />
+                      </svg>
+                    </button>
+                  </div>
                 </div>
-                <EmotionBars data={currentData} />
+                {emotionView === "grid" ? (
+                  <EmotionGrid data={currentData} />
+                ) : (
+                  <EmotionBarsVertical data={currentData} />
+                )}
               </div>
-              <div className="col-span-2 rounded-rm border border-[#1a1a1a] bg-bg1 p-3.5">
-                <div className="mb-2.5 text-xs font-semibold text-t2">
-                  Combined Emotion Progress
-                </div>
-                <EmotionChart data={DEMO_EMOTION_DATA} height={150} />
+              <div className="col-span-5">
+                <StackedEmotionChart />
               </div>
             </div>
+            )}
           </div>
         )}
       </div>
