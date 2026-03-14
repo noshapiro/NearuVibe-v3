@@ -79,8 +79,8 @@ export function OfflineAnalysis() {
   return (
     <div className="flex flex-1 flex-col overflow-hidden">
       <Topbar
-        title="Offline Analysis"
-        subtitle=" — Analysis"
+        title="Video Analysis"
+        subtitle=" — Upload"
         statusLabel="Ready"
         statusType="ready"
       />

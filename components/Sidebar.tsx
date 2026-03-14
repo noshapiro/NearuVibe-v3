@@ -27,9 +27,9 @@ const sessionsIcon = (
   </svg>
 );
 const faqIcon = (
-  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}>
     <circle cx={12} cy={12} r={10} />
-    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01" />
+    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3L12 17M12 17h.01" />
   </svg>
 );
 const settingsIcon = (
@@ -62,7 +62,7 @@ export function Sidebar({ activeScreen, setActiveScreen }: SidebarProps) {
         icon={liveIcon}
       />
       <NavItem
-        label="Offline Analysis"
+        label="Video Analysis"
         active={activeScreen === "offline"}
         onClick={() => setActiveScreen("offline")}
         icon={offlineIcon}
@@ -77,16 +77,16 @@ export function Sidebar({ activeScreen, setActiveScreen }: SidebarProps) {
         SUPPORT
       </div>
       <NavItem
-        label="FAQ"
-        active={activeScreen === "faq"}
-        onClick={() => setActiveScreen("faq")}
-        icon={faqIcon}
-      />
-      <NavItem
         label="Settings"
         active={activeScreen === "settings"}
         onClick={() => setActiveScreen("settings")}
         icon={settingsIcon}
+      />
+      <NavItem
+        label="FAQ"
+        active={activeScreen === "faq"}
+        onClick={() => setActiveScreen("faq")}
+        icon={faqIcon}
       />
       <div className="flex-1" />
       <div className="mt-1.5 flex items-center gap-2 border-t border-[#191919] pt-2.5">

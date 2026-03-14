@@ -223,63 +223,71 @@ export function LiveSession() {
                   color: "var(--acc)",
                   title: "Pitch Practice",
                   desc: "Refine clarity & presence",
+                  hint: "Acts as a pitch coach — feedback on clarity, pacing, and persuasiveness",
                 },
                 {
                   icon: "users",
                   color: "#a78bfa",
                   title: "Difficult Conversations",
                   desc: "Navigate tension precisely",
+                  hint: "Acts as a conversation coach — de\u2011escalation and assertive communication",
                 },
                 {
                   icon: "chat",
                   color: "#38bdf8",
                   title: "Investor Q&A",
                   desc: "Practice tough questions",
+                  hint: "Acts as a tough Investor — challenging questions and pressure testing",
                 },
                 {
                   icon: "heart",
                   color: "#ef4444",
                   title: "Heart-to-Heart",
                   desc: "Open emotional space",
+                  hint: "Acts as an empathetic listener — safe space for open emotional expression",
                 },
               ].map((item) => (
-                <button
-                  key={item.title}
-                  type="button"
-                  className="flex cursor-pointer flex-col rounded-rm border border-[#1e1e1e] bg-bg2 p-3 text-left transition-all duration-[0.14s] hover:border-bg4 hover:bg-bg3"
-                >
-                  <span className="mb-2.5 block h-[22px] w-[22px]" style={{ color: item.color }}>
-                    {item.icon === "target" && (
-                      <svg width={20} height={20} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <circle cx={12} cy={12} r={10} />
-                        <circle cx={12} cy={12} r={3} />
-                        <line x1={12} y1={2} x2={12} y2={5} />
-                        <line x1={12} y1={19} x2={12} y2={22} />
-                        <line x1={2} y1={12} x2={5} y2={12} />
-                        <line x1={19} y1={12} x2={22} y2={12} />
-                      </svg>
-                    )}
-                    {item.icon === "users" && (
-                      <svg width={20} height={20} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                        <circle cx={9} cy={7} r={4} />
-                        <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
-                      </svg>
-                    )}
-                    {item.icon === "chat" && (
-                      <svg width={20} height={20} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                      </svg>
-                    )}
-                    {item.icon === "heart" && (
-                      <svg width={20} height={20} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-                      </svg>
-                    )}
-                  </span>
-                  <div className="text-[13px] font-semibold text-t1">{item.title}</div>
-                  <div className="text-[11px] text-t3">{item.desc}</div>
-                </button>
+                <div key={item.title} className="group relative overflow-visible">
+                  <div className="pointer-events-none absolute bottom-full left-0 right-0 z-50 mb-1.5 rounded-rm border border-bg4 bg-bg2 p-3 text-xs leading-relaxed text-t2 opacity-0 transition-opacity duration-150 group-hover:opacity-100">
+                    {item.hint}
+                  </div>
+                  <button
+                    type="button"
+                    className="flex w-full cursor-pointer flex-col rounded-rm border border-[#1e1e1e] bg-bg2 p-3 text-left transition-all duration-[0.14s] hover:border-bg4 hover:bg-bg3"
+                  >
+                    <span className="mb-2.5 block h-[22px] w-[22px]" style={{ color: item.color }}>
+                      {item.icon === "target" && (
+                        <svg width={20} height={20} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <circle cx={12} cy={12} r={10} />
+                          <circle cx={12} cy={12} r={3} />
+                          <line x1={12} y1={2} x2={12} y2={5} />
+                          <line x1={12} y1={19} x2={12} y2={22} />
+                          <line x1={2} y1={12} x2={5} y2={12} />
+                          <line x1={19} y1={12} x2={22} y2={12} />
+                        </svg>
+                      )}
+                      {item.icon === "users" && (
+                        <svg width={20} height={20} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                          <circle cx={9} cy={7} r={4} />
+                          <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+                        </svg>
+                      )}
+                      {item.icon === "chat" && (
+                        <svg width={20} height={20} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                        </svg>
+                      )}
+                      {item.icon === "heart" && (
+                        <svg width={20} height={20} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                        </svg>
+                      )}
+                    </span>
+                    <div className="text-[13px] font-semibold text-t1">{item.title}</div>
+                    <div className="text-[11px] text-t3">{item.desc}</div>
+                  </button>
+                </div>
               ))}
             </div>
           </div>
