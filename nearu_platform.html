@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nearu Platform</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg0:#0a0a0a;--bg1:#111111;--bg2:#181818;--bg3:#222222;--bg4:#2a2a2a;
+  --t1:#ffffff;--t2:#a0a0a0;--t3:#555555;
+  --acc:#20808d;--acc2:#1a6b76;
+  --rs:8px;--rm:12px;--rl:16px;
+  --happy:#f59e0b;--neutral:#6b7280;--fearful:#a78bfa;--angry:#ef4444;--calm:#38bdf8;--surprised:#ec4899
+}
+body{background:var(--bg0);color:var(--t1);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;height:100vh;display:flex;overflow:hidden}
+
+/* SIDEBAR */
+#sidebar{width:188px;min-width:188px;background:var(--bg1);display:flex;flex-direction:column;padding:16px 8px 12px;gap:2px;border-right:1px solid #191919}
+.logo{font-size:19px;font-weight:700;letter-spacing:.06em;padding:4px 10px 14px;color:var(--t1)}
+.logo span{color:var(--acc)}
+.nav-sep{font-size:10px;font-weight:600;color:var(--t3);letter-spacing:.08em;text-transform:uppercase;padding:10px 10px 4px}
+.ni{display:flex;align-items:center;gap:9px;padding:0 10px;height:36px;border-radius:var(--rs);cursor:pointer;color:var(--t2);font-size:13px;font-weight:500;transition:all .14s;user-select:none;white-space:nowrap}
+.ni:hover{background:var(--bg3);color:var(--t1)}
+.ni.active{background:var(--bg2);color:var(--t1)}
+.ni svg{width:15px;height:15px;flex-shrink:0;opacity:.75}
+.ni.active svg{opacity:1}
+.nav-sp{flex:1}
+.nu{display:flex;align-items:center;gap:8px;padding:10px 8px 0;border-top:1px solid #191919;margin-top:6px}
+.ua{width:26px;height:26px;border-radius:50%;background:var(--acc2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:#fff;flex-shrink:0}
+.un{font-size:12px;color:var(--t1);font-weight:500}
+.us{font-size:11px;color:var(--t3)}
+
+/* MAIN */
+#main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+
+/* TOPBAR */
+.topbar{height:52px;display:flex;align-items:center;padding:0 20px;gap:10px;border-bottom:1px solid #191919;flex-shrink:0}
+.pt{font-size:15px;font-weight:600;color:var(--t1)}
+.ps{font-size:14px;color:var(--t3);font-weight:400}
+.tr{margin-left:auto;display:flex;align-items:center;gap:8px}
+.sb{display:flex;align-items:center;gap:6px;background:var(--bg2);border:1px solid var(--bg4);border-radius:20px;padding:4px 12px;font-size:12px;font-weight:500;color:var(--t2)}
+.sd{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.ready{background:var(--t3)}
+.listening{background:#22c55e;animation:p 1.5s infinite}
+.thinking{background:#3b82f6;animation:p 1s infinite}
+.responding{background:#22c55e}
+@keyframes p{0%,100%{opacity:1}50%{opacity:.3}}
+.ib{width:32px;height:32px;border-radius:var(--rs);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--t2);transition:background .14s}
+.ib:hover{background:var(--bg2)}
+.ib svg{width:16px;height:16px}
+
+/* SCREENS */
+.scr{display:none;flex:1;overflow:hidden;min-width:0}
+.scr.active{display:flex}
+
+/* ====== LIVE SESSION ====== */
+.live-body{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.avatar-stage{background:var(--bg1);border-radius:var(--rl);border:1px solid #1a1a1a;display:flex;flex-direction:column;align-items:center;padding:28px 20px 22px;position:relative;gap:14px}
+.sc{position:absolute;top:12px;right:12px;width:26px;height:26px;border-radius:6px;background:var(--bg3);border:1px solid var(--bg4);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--t2);font-size:11px}
+.aw{width:130px;height:130px;border-radius:50%;background:var(--bg3);border:2px solid var(--bg4);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.ar{position:absolute;inset:-5px;border-radius:50%;border:2.5px solid transparent;pointer-events:none;transition:border-color .25s}
+.ar.ls{border-color:#22c55e;animation:rp 1.5s infinite}
+.ar.th{border-color:#3b82f6}
+.ar.rs{border-color:var(--acc)}
+@keyframes rp{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.03)}}
+.ast{font-size:13px;color:var(--t2)}
+.dots{display:inline-flex;gap:3px;margin-right:5px;vertical-align:middle}
+.dots span{width:4px;height:4px;border-radius:50%;background:var(--acc);animation:b .8s infinite;display:inline-block}
+.dots span:nth-child(2){animation-delay:.15s}.dots span:nth-child(3){animation-delay:.3s}
+@keyframes b{0%,100%{transform:scaleY(1)}50%{transform:scaleY(2)}}
+.tbtn{background:var(--acc);border:none;border-radius:24px;padding:9px 22px;font-size:13px;font-weight:500;color:#fff;cursor:pointer;display:flex;align-items:center;gap:7px;transition:all .14s;user-select:none}
+.tbtn:hover{background:var(--acc2)}
+.tbtn.rec{background:#ef4444}
+.ebar{background:var(--bg1);border-radius:var(--rm);border:1px solid #1a1a1a;padding:12px 16px;display:flex;align-items:center;gap:10px}
+.eg{font-size:12px;color:var(--t3)}
+.stitle{font-size:11px;font-weight:600;color:var(--t3);letter-spacing:.07em;text-transform:uppercase;margin-bottom:9px}
+.tgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.tc{background:var(--bg2);border:1px solid #1e1e1e;border-radius:var(--rm);padding:13px;cursor:pointer;transition:all .14s}
+.tc:hover{background:var(--bg3);border-color:var(--bg4)}
+.te{width:22px;height:22px;display:block;margin-bottom:10px}
+.tn{font-size:13px;font-weight:600;color:var(--t1);margin-bottom:2px}
+.td{font-size:11px;color:var(--t3)}
+
+/* RIGHT PANEL */
+.rp{width:256px;min-width:256px;background:var(--bg1);border-left:1px solid #191919;display:flex;flex-direction:column;padding:18px 14px;gap:14px;overflow-y:auto}
+.rpt{font-size:10px;font-weight:600;color:var(--t3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
+.esnap{background:var(--bg2);border-radius:var(--rm);padding:13px;display:flex;flex-direction:column;gap:9px}
+.sm{display:flex;align-items:center;gap:7px}
+.sdot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.se{font-size:14px;font-weight:600;color:var(--t1)}
+.spp{margin-left:auto;font-size:12px;color:var(--t2)}
+.srow{display:flex;align-items:center;gap:7px}
+.sl{font-size:10px;color:var(--t3);width:44px;flex-shrink:0;text-transform:uppercase;font-weight:500;letter-spacing:.05em}
+.sbw{flex:1;height:3px;background:var(--bg4);border-radius:2px;overflow:hidden}
+.sbf{height:100%;border-radius:2px;transition:width .5s ease}
+.sv{font-size:10px;color:var(--t3);width:40px;text-align:right}
+.ch-hdr{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.cav{width:26px;height:26px;border-radius:50%;background:var(--bg3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px}
+.cn{font-size:13px;font-weight:600;color:var(--t1)}
+.msgs{display:flex;flex-direction:column;gap:8px;flex:1}
+.msg{padding:9px 11px;border-radius:var(--rm);font-size:12px;line-height:1.5;word-break:break-word}
+.msg.u{background:var(--acc);color:#fff;align-self:flex-end;border-bottom-right-radius:4px;max-width:90%}
+.msg.n{background:var(--bg2);color:var(--t1);align-self:flex-start;border-bottom-left-radius:4px;max-width:95%}
+.mf{font-size:10px;color:var(--acc);font-style:italic;margin-top:3px}
+.ce{font-size:12px;color:var(--t3)}
+
+/* ====== OFFLINE ANALYSIS ====== */
+.off-body{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:16px}
+.up-card{background:var(--bg1);border:1px solid #1e1e1e;border-radius:var(--rl);padding:24px}
+.up-title{font-size:14px;font-weight:600;color:var(--t1);margin-bottom:4px}
+.up-sub{font-size:12px;color:var(--t3);margin-bottom:16px}
+.up-row{display:flex;gap:10px;align-items:center}
+.ubtn{display:inline-flex;align-items:center;gap:7px;background:var(--acc);border:none;border-radius:var(--rs);padding:9px 18px;font-size:13px;font-weight:500;color:#fff;cursor:pointer;transition:background .14s}
+.ubtn:hover{background:var(--acc2)}
+.ubtn-sec{background:var(--bg2);border:1px solid var(--bg4);border-radius:var(--rs);padding:9px 16px;font-size:13px;color:var(--t1);cursor:pointer;transition:background .14s;font-weight:500}
+.ubtn-sec:hover{background:var(--bg3)}
+.up-hint{font-size:11px;color:var(--t3);margin-top:10px}
+.preview-card{display:none;background:var(--bg2);border-radius:var(--rm);border:1px solid #1e1e1e;padding:12px 14px;align-items:center;gap:12px}
+.preview-card.show{display:flex}
+.prev-icon{width:36px;height:36px;border-radius:8px;background:var(--bg3);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.prev-name{font-size:13px;font-weight:600;color:var(--t1)}
+.prev-size{font-size:11px;color:var(--t3);margin-top:2px}
+.prev-remove{margin-left:auto;font-size:11px;color:var(--t3);cursor:pointer;padding:4px 8px;border-radius:6px;transition:background .14s}
+.prev-remove:hover{background:var(--bg4);color:var(--t1)}
+.analyze-btn{background:var(--acc);border:none;border-radius:var(--rs);padding:9px 22px;font-size:13px;font-weight:500;color:#fff;cursor:pointer;transition:background .14s;display:none;margin-top:14px}
+.analyze-btn.show{display:block}
+.analyze-btn:hover{background:var(--acc2)}
+.proc{display:none;background:var(--bg1);border-radius:var(--rl);border:1px solid #1e1e1e;padding:36px 24px;flex-direction:column;align-items:center;gap:14px}
+.proc.show{display:flex}
+.spin{width:30px;height:30px;border:2px solid var(--bg4);border-top-color:var(--acc);border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.pstep{display:flex;align-items:center;gap:9px;font-size:12px;color:var(--t2)}
+.pstep.done{color:var(--t3)}.pstep.wait{color:var(--t3)}
+.pdot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.pstep .pdot{background:var(--acc)}.pstep.done .pdot{background:#22c55e}.pstep.wait .pdot{background:var(--bg4)}
+.ares{display:none;flex-direction:column;gap:14px}
+.ares.show{display:flex}
+.atop{display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--bg1);border-radius:var(--rm);border:1px solid #1a1a1a;flex-wrap:wrap;gap:8px}
+.afn{font-size:13px;font-weight:600;color:var(--t1);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.am{font-size:11px;color:var(--t3);white-space:nowrap}
+.tabs{display:flex;gap:3px;background:var(--bg2);border-radius:6px;padding:3px}
+.tab{padding:4px 12px;border-radius:5px;font-size:12px;font-weight:500;cursor:pointer;color:var(--t2);background:transparent;border:none;transition:all .13s}
+.tab.on{background:var(--bg4);color:var(--t1)}
+.nbtn{background:var(--bg2);border:1px solid var(--bg4);border-radius:var(--rs);padding:6px 12px;font-size:12px;color:var(--t1);cursor:pointer;white-space:nowrap}
+.agrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.aplayer{background:var(--bg1);border-radius:var(--rm);border:1px solid #1a1a1a;overflow:hidden}
+.pvid{background:var(--bg2);height:190px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;position:relative}
+.pctl{padding:11px 14px;display:flex;align-items:center;gap:9px;border-top:1px solid #1a1a1a}
+.pbtn{width:26px;height:26px;border-radius:50%;background:var(--acc);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0}
+.tbar{flex:1;height:4px;background:var(--bg3);border-radius:2px;position:relative;cursor:pointer}
+.tprog{height:100%;background:var(--acc);border-radius:2px;transition:width .2s}
+.tthumb{width:9px;height:9px;border-radius:50%;background:#fff;position:absolute;top:-2.5px;transform:translateX(-50%)}
+.ttxt{font-size:10px;color:var(--t3);min-width:68px;text-align:right}
+.spdbtn{font-size:10px;color:var(--t2);background:var(--bg3);border:none;border-radius:4px;padding:3px 7px;cursor:pointer}
+.epanel{background:var(--bg1);border-radius:var(--rm);border:1px solid #1a1a1a;padding:14px}
+.eh{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.etime{font-size:11px;color:var(--t3);font-variant-numeric:tabular-nums}
+.ebgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;height:130px;align-items:flex-end}
+.ecol{display:flex;flex-direction:column;align-items:center;gap:4px;height:100%}
+.ewrap{flex:1;width:100%;display:flex;align-items:flex-end;justify-content:center}
+.efill{width:34px;border-radius:4px 4px 0 0;transition:height .5s cubic-bezier(.4,0,.2,1)}
+.elabel{font-size:9px;color:var(--t3);font-weight:600;text-align:center;text-transform:uppercase;letter-spacing:.04em}
+.epct{font-size:11px;font-weight:700;text-align:center}
+.echan{font-size:9px;color:var(--t3);text-align:center}
+.chartpanel{background:var(--bg1);border-radius:var(--rm);border:1px solid #1a1a1a;padding:14px;grid-column:1/-1}
+.ctitle{font-size:12px;font-weight:600;color:var(--t2);margin-bottom:10px}
+
+/* ====== SESSIONS ====== */
+.sess-body{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:12px}
+.sess-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:4px}
+.filter-btn{background:var(--bg2);border:1px solid var(--bg4);border-radius:20px;padding:5px 14px;font-size:12px;font-weight:500;color:var(--t2);cursor:pointer;transition:all .13s}
+.filter-btn:hover{color:var(--t1)}
+.filter-btn.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.sess-card{background:var(--bg1);border:1px solid #1e1e1e;border-radius:var(--rm);padding:14px 16px;cursor:pointer;transition:all .14s;display:flex;flex-direction:column;gap:8px}
+.sess-card:hover{background:var(--bg2);border-color:var(--bg4)}
+.sess-top{display:flex;align-items:center;gap:10px}
+.sess-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.sess-info{flex:1;min-width:0}
+.sess-title{font-size:13px;font-weight:600;color:var(--t1)}
+.sess-date{font-size:11px;color:var(--t3)}
+.badge{border-radius:20px;padding:3px 10px;font-size:11px;font-weight:600}
+.sess-dur{font-size:11px;color:var(--t3);margin-left:auto;white-space:nowrap}
+.sess-bars{display:flex;gap:8px}
+.sbar-item{display:flex;align-items:center;gap:5px;flex:1}
+.sbar-lbl{font-size:10px;color:var(--t3);width:34px;text-transform:uppercase;font-weight:600;letter-spacing:.04em}
+.sbar-bg{flex:1;height:3px;background:var(--bg4);border-radius:2px;overflow:hidden}
+.sbar-fg{height:100%;border-radius:2px}
+.sbar-val{font-size:10px;color:var(--t3);width:28px;text-align:right}
+.sess-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--t3);font-size:13px;padding:40px}
+
+/* ====== SETTINGS ====== */
+.set-body{flex:1;overflow-y:auto;display:flex;justify-content:center;padding:28px 20px}
+.set-wrap{max-width:640px;width:100%;display:flex;flex-direction:column;gap:14px}
+.set-heading{font-size:20px;font-weight:600;color:var(--t1);margin-bottom:4px}
+.set-card{background:var(--bg1);border:1px solid #1e1e1e;border-radius:var(--rm);padding:18px;display:flex;flex-direction:column;gap:12px}
+.set-row{display:flex;align-items:flex-start;gap:14px;justify-content:space-between}
+.set-lbl{font-size:14px;font-weight:600;color:var(--t1);margin-bottom:3px}
+.set-desc{font-size:12px;color:var(--t3);line-height:1.5}
+.tog{width:38px;height:21px;border-radius:11px;background:var(--bg4);position:relative;cursor:pointer;flex-shrink:0;transition:background .18s;border:none}
+.tog.on{background:var(--acc)}
+.tthm{width:15px;height:15px;border-radius:50%;background:#fff;position:absolute;top:3px;left:3px;transition:transform .18s;pointer-events:none}
+.tog.on .tthm{transform:translateX(17px)}
+.ssel{background:var(--bg2);border:1px solid var(--bg4);border-radius:var(--rs);padding:7px 10px;font-size:13px;color:var(--t1);outline:none;width:180px;cursor:pointer}
+.smbtn{background:var(--bg2);border:1px solid var(--bg4);border-radius:var(--rs);padding:6px 13px;font-size:12px;color:var(--t1);cursor:pointer;transition:background .13s;white-space:nowrap}
+.smbtn:hover{background:var(--bg3)}
+.smbtn.danger{background:rgba(239,68,68,.08);border-color:rgba(239,68,68,.25);color:#ef4444}
+.divx{height:1px;background:#1a1a1a}
+
+/* ====== FAQ ====== */
+.faq-body{flex:1;overflow-y:auto;padding:20px 24px;display:flex;flex-direction:column;gap:12px}
+.faq-search{background:var(--bg2);border:1px solid var(--bg4);border-radius:var(--rs);padding:10px 14px;font-size:13px;color:var(--t1);outline:none;width:100%;max-width:480px;margin-bottom:4px}
+.faq-search::placeholder{color:var(--t3)}
+.faq-search:focus{border-color:var(--acc)}
+.faq-item{background:var(--bg1);border:1px solid #1e1e1e;border-radius:var(--rm);overflow:hidden}
+.faq-q{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;transition:background .13s;font-size:13px;font-weight:600;color:var(--t1)}
+.faq-q:hover{background:var(--bg2)}
+.faq-arrow{font-size:11px;color:var(--t3);transition:transform .2s;flex-shrink:0;margin-left:12px}
+.faq-item.open .faq-arrow{transform:rotate(180deg)}
+.faq-a{display:none;padding:12px 16px 14px;font-size:13px;color:var(--t2);line-height:1.65;border-top:1px solid #1a1a1a}
+.faq-item.open .faq-a{display:block}
+.faq-tag{display:inline-block;background:rgba(32,128,141,.15);color:var(--acc);border-radius:20px;padding:2px 10px;font-size:11px;font-weight:600;margin-right:6px}
+
+/* ====== LOGIN (bonus screen) ====== */
+#scr-login{justify-content:center;align-items:center;background:var(--bg0);position:fixed;inset:0;z-index:100;display:none}
+#scr-login.active{display:flex}
+.login-card{background:var(--bg1);border:1px solid #1e1e1e;border-radius:var(--rl);padding:40px;width:380px;display:flex;flex-direction:column;gap:18px;align-items:center}
+.login-logo{font-size:28px;font-weight:700;letter-spacing:.1em;color:var(--t1)}
+.login-logo span{color:var(--acc)}
+.login-title{font-size:16px;font-weight:600;color:var(--t1)}
+.login-sub{font-size:13px;color:var(--t3);text-align:center;line-height:1.5}
+.field-label{font-size:12px;color:var(--t2);font-weight:500;align-self:flex-start}
+.field-input{width:100%;background:var(--bg2);border:1px solid var(--bg4);border-radius:var(--rs);padding:10px 14px;font-size:14px;color:var(--t1);outline:none;transition:border .15s}
+.field-input:focus{border-color:var(--acc)}
+.btn-primary{width:100%;background:var(--acc);border:none;border-radius:var(--rs);height:40px;font-size:14px;font-weight:500;color:#fff;cursor:pointer;transition:background .15s}
+.btn-primary:hover{background:var(--acc2)}
+.login-footer{font-size:11px;color:var(--t3);text-align:center}
+</style>
+</head>
+<body>
+
+<!-- LOGIN OVERLAY -->
+<div id="scr-login">
+  <div class="login-card">
+    <div class="login-logo">NEA<span>RU</span></div>
+    <div class="login-title">Welcome to NearuVibe</div>
+    <div class="login-sub">Enter your invite key to get started. Contact us if you don't have one yet.</div>
+    <span class="field-label">Invite Key</span>
+    <input class="field-input" type="password" id="inv-key" placeholder="Enter your invite key..." onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="btn-primary" onclick="doLogin()">Continue</button>
+    <div class="login-footer">Your invite key is stored locally in your browser. No personal data is collected.</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="sidebar">
+  <div class="logo">NEA<span>RU</span></div>
+  <div class="nav-sep">Workspace</div>
+  <div class="ni active" id="nav-live" onclick="go('live')">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2a10 10 0 0 1 10 10M12 2a10 10 0 0 0-10 10"/></svg>
+    Live Session
+  </div>
+  <div class="ni" id="nav-offline" onclick="go('offline')">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="14" rx="2"/><path d="M7 21h10M12 17v4"/></svg>
+    Offline Analysis
+  </div>
+  <div class="ni" id="nav-sessions" onclick="go('sessions')">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
+    Sessions
+  </div>
+  <div class="nav-sep">Support</div>
+  <div class="ni" id="nav-faq" onclick="go('faq')">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/></svg>
+    FAQ
+  </div>
+  <div class="ni" id="nav-settings" onclick="go('settings')">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83-2.83l.06.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    Settings
+  </div>
+  <div class="nav-sp"></div>
+  <div class="nu">
+    <div class="ua">N</div>
+    <div style="display:flex;flex-direction:column">
+      <span class="un">Nearu User</span>
+      <span class="us">Web</span>
+    </div>
+  </div>
+</div>
+
+<div id="main">
+
+<!-- ===== LIVE SESSION ===== -->
+<div id="scr-live" class="scr active" style="flex-direction:column">
+  <div class="topbar">
+    <span class="pt">Live Session</span><span class="ps">&nbsp;— Session</span>
+    <div class="tr">
+      <div class="sb"><div class="sd ready" id="ldot"></div><span id="ltxt">Ready</span></div>
+      <div class="ib"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div>
+    </div>
+  </div>
+  <div style="display:flex;flex:1;overflow:hidden;min-width:0">
+    <div class="live-body">
+      <div class="avatar-stage">
+        <div class="sc" onclick=""><svg width="10" height="10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></div>
+        <div style="position:relative">
+          <div class="aw"><svg width="64" height="64" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color:var(--acc);opacity:.9"><rect x="3" y="8" width="18" height="12" rx="3"/><path d="M12 8V5M9 5h6M7 12h.01M17 12h.01M9 15h6"/><circle cx="12" cy="3" r="1" fill="currentColor" stroke="none"/></svg></div>
+          <div class="ar" id="aring"></div>
+        </div>
+        <div class="ast" id="astat">Press Space to start</div>
+        <button class="tbtn" id="tbtn" onclick="toggleSess()">
+          <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8"/></svg>
+          <span id="tbtn-txt">Talk to Nearu</span>
+        </button>
+      </div>
+      <div class="ebar">
+        <span style="font-size:12px;color:var(--t2);font-weight:500">Detected emotion</span>
+        <span id="etag-txt" style="font-size:12px;color:var(--t3)">Waiting for input...</span>
+        <span class="eg" id="econf"></span>
+      </div>
+      <div>
+        <div class="stitle">Quick Tools</div>
+        <div class="tgrid">
+          <div class="tc"><span class="te"><svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color:var(--acc)"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/></svg></span><div class="tn">Pitch Practice</div><div class="td">Refine clarity &amp; presence</div></div>
+          <div class="tc"><span class="te"><svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color:#a78bfa"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><div class="tn">Difficult Conversations</div><div class="td">Navigate tension precisely</div></div>
+          <div class="tc"><span class="te"><svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color:#38bdf8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span><div class="tn">Investor Q&amp;A</div><div class="td">Practice tough questions</div></div>
+          <div class="tc"><span class="te"><svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color:#ef4444"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span><div class="tn">Heart-to-Heart</div><div class="td">Open emotional space</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="rp">
+      <div>
+        <div class="rpt">Emotion Snapshot</div>
+        <div class="esnap">
+          <div style="font-size:10px;font-weight:600;color:var(--t3);letter-spacing:.07em;text-transform:uppercase">This Session</div>
+          <div class="sm"><div class="sdot" id="sm-dot" style="background:var(--t3)"></div><span class="se" id="sm-e">Waiting...</span><span class="spp" id="sm-p"></span></div>
+          <div class="srow"><span class="sl">Tone</span><div class="sbw"><div class="sbf" id="bf-tone" style="width:0%;background:var(--t3)"></div></div><span class="sv" id="sv-tone"><span style="font-style:italic;color:var(--t3)">—</span></span></div>
+          <div class="srow"><span class="sl">Words</span><div class="sbw"><div class="sbf" id="bf-words" style="width:0%;background:var(--t3)"></div></div><span class="sv" id="sv-words"><span style="font-style:italic;color:var(--t3)">—</span></span></div>
+          <div class="srow"><span class="sl">Face</span><div class="sbw"><div class="sbf" id="bf-face" style="width:0%;background:var(--t3)"></div></div><span class="sv" id="sv-face"><span style="font-style:italic;color:var(--t3)">—</span></span></div>
+        </div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;min-height:0">
+        <div class="ch-hdr"><div class="cav"><svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color:var(--acc)"><rect x="3" y="8" width="18" height="12" rx="3"/><path d="M12 8V5M9 5h6M7 12h.01M17 12h.01M9 15h6"/></svg></div><span class="cn">Chat with Nearu</span></div>
+        <div class="msgs" id="chatmsgs"><span class="ce">Start talking to begin</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== OFFLINE ANALYSIS ===== -->
+<div id="scr-offline" class="scr" style="flex-direction:column">
+  <div class="topbar">
+    <span class="pt">Offline Analysis</span><span class="ps">&nbsp;— Analysis</span>
+    <div class="tr">
+      <div class="sb"><div class="sd ready"></div><span>Ready</span></div>
+      <div class="ib"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div>
+    </div>
+  </div>
+  <div class="off-body">
+    <div class="up-card" id="up-card">
+      <div class="up-title">Analyze a video recording</div>
+      <div class="up-sub">Upload a video file to run emotion analysis across voice, facial expressions, and language.</div>
+      <div class="up-row">
+        <button class="ubtn" onclick="document.getElementById('finput').click()">
+          <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+          Upload video
+        </button>
+        <button class="ubtn-sec" onclick="loadDemo()">Try demo file</button>
+        <input type="file" id="finput" accept="video/*" style="display:none" onchange="fileSelected(this)">
+      </div>
+      <div class="up-hint">Supports MP4, MOV, WebM — up to 500 MB</div>
+      <div class="preview-card" id="prev-card" style="margin-top:14px">
+        <div class="prev-icon">
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color:var(--acc)"><rect x="3" y="3" width="18" height="14" rx="2"/><path d="M7 21h10M12 17v4"/></svg>
+        </div>
+        <div>
+          <div class="prev-name" id="prev-name">—</div>
+          <div class="prev-size" id="prev-size">—</div>
+        </div>
+        <div class="prev-remove" onclick="removeFile()">Remove</div>
+      </div>
+      <button class="analyze-btn" id="analyze-btn" onclick="startAnalysis()">Run Analysis →</button>
+    </div>
+    <div class="proc" id="proc">
+      <div class="spin"></div>
+      <div style="font-size:14px;font-weight:600;color:var(--t1)">Analyzing your video...</div>
+      <div style="font-size:12px;color:var(--t3)">This usually takes 10–30 seconds</div>
+      <div style="display:flex;flex-direction:column;gap:7px;width:100%;max-width:260px;margin-top:6px">
+        <div class="pstep" id="ps1"><div class="pdot"></div>Extracting audio tracks</div>
+        <div class="pstep wait" id="ps2"><div class="pdot"></div>Analyzing acoustic emotion</div>
+        <div class="pstep wait" id="ps3"><div class="pdot"></div>Processing facial expressions</div>
+        <div class="pstep wait" id="ps4"><div class="pdot"></div>Fusing emotion signals</div>
+      </div>
+    </div>
+    <div class="ares" id="ares">
+      <div class="atop">
+        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color:var(--acc);flex-shrink:0"><rect x="3" y="3" width="18" height="14" rx="2"/></svg>
+        <span class="afn" id="rfn">demo_video.mp4</span>
+        <span class="am">76.5s · 766 data points</span>
+        <div class="tabs">
+          <button class="tab" id="t-tl" onclick="setTab('tl')">Timeline</button>
+          <button class="tab on" id="t-pb" onclick="setTab('pb')">Playback</button>
+        </div>
+        <button class="nbtn" onclick="resetAnal()">← New Analysis</button>
+      </div>
+      <div class="agrid">
+        <div class="aplayer">
+          <div class="pvid">
+            <div style="width:54px;height:54px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center">
+              <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color:var(--t2)"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            </div>
+            <span style="font-size:11px;color:var(--t3)">Video preview</span>
+            <div style="position:absolute;top:8px;left:8px;font-size:10px;color:var(--t3);background:var(--bg2);padding:2px 7px;border-radius:4px" id="vtovrl">0:00 / 1:16</div>
+          </div>
+          <div class="pctl">
+            <button class="pbtn" id="pbtn" onclick="togglePlay()"><svg width="9" height="9" fill="currentColor" viewBox="0 0 24 24" id="pico"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
+            <div class="tbar" id="tbar" onclick="seekV(event)">
+              <div class="tprog" id="tprog" style="width:0%"></div>
+              <div class="tthumb" id="tthumb" style="left:0%"></div>
+            </div>
+            <span class="ttxt" id="tdisplay">00:00 / 01:16</span>
+            <button class="spdbtn" id="spdbtn" onclick="cycleSpd()">1x</button>
+          </div>
+        </div>
+        <div class="epanel">
+          <div class="eh">
+            <span style="font-size:13px;font-weight:600;color:var(--t1)">Current Emotions</span>
+            <span class="etime" id="ets">0:00</span>
+          </div>
+          <div class="ebgrid" id="ebgrid"></div>
+        </div>
+        <div class="chartpanel">
+          <div class="ctitle">Combined Emotion Progress</div>
+          <canvas id="echart" style="width:100%;height:150px"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SESSIONS ===== -->
+<div id="scr-sessions" class="scr" style="flex-direction:column">
+  <div class="topbar">
+    <span class="pt">Sessions</span><span class="ps">&nbsp;— History</span>
+    <div class="tr">
+      <div class="ib"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div>
+    </div>
+  </div>
+  <div class="sess-body">
+    <div class="sess-filters">
+      <button class="filter-btn on" onclick="filterSess(this,'all')">All</button>
+      <button class="filter-btn" onclick="filterSess(this,'live')">Live Sessions</button>
+      <button class="filter-btn" onclick="filterSess(this,'offline')">Offline Analysis</button>
+    </div>
+    <div id="sess-list"></div>
+  </div>
+</div>
+
+<!-- ===== FAQ ===== -->
+<div id="scr-faq" class="scr" style="flex-direction:column">
+  <div class="topbar">
+    <span class="pt">FAQ</span><span class="ps">&nbsp;— Help &amp; Documentation</span>
+    <div class="tr">
+      <div class="ib"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div>
+    </div>
+  </div>
+  <div class="faq-body">
+    <input class="faq-search" id="faq-search" placeholder="Search questions..." oninput="filterFaq(this.value)">
+    <div id="faq-list"></div>
+  </div>
+</div>
+
+<!-- ===== SETTINGS ===== -->
+<div id="scr-settings" class="scr">
+  <div class="set-body">
+    <div class="set-wrap">
+      <div class="set-heading">Settings</div>
+      <div class="set-card">
+        <div class="set-row">
+          <div><div class="set-lbl">Enable Avatar</div><div class="set-desc">Animated avatar with lip-synced speech via LiveAvatar. When off, static image + OpenAI TTS is used.</div></div>
+          <button class="tog" onclick="this.classList.toggle('on')"><div class="tthm"></div></button>
+        </div>
+      </div>
+      <div class="set-card">
+        <div class="set-lbl">TTS Voice</div>
+        <div class="set-desc">OpenAI TTS voice for spoken responses.</div>
+        <div style="display:flex;gap:10px;align-items:center">
+          <select class="ssel"><option>nova</option><option>alloy</option><option>echo</option><option>fable</option><option>onyx</option><option>shimmer</option></select>
+          <button class="smbtn">▶ Preview</button>
+        </div>
+      </div>
+      <div class="set-card">
+        <div class="set-lbl">Privacy &amp; Memory</div>
+        <div class="divx"></div>
+        <div class="set-row">
+          <div class="set-lbl" style="font-size:13px;font-weight:500">Save conversation history</div>
+          <button class="tog on" onclick="this.classList.toggle('on')"><div class="tthm"></div></button>
+        </div>
+        <div style="display:flex;gap:8px"><button class="smbtn">Clear current session</button><button class="smbtn danger">Clear all memory</button></div>
+        <div class="set-desc">Emotion signals are approximate and optional. Camera processing is local — webcam frames are never stored. Only transcripts and emotion summaries are saved.</div>
+      </div>
+      <div class="set-card">
+        <div class="set-lbl">Access</div>
+        <div class="divx"></div>
+        <button class="smbtn" onclick="document.getElementById('scr-login').classList.add('active')">Sign out (clear invite key)</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<script>
+var EC={Happy:'#f59e0b',Calm:'#38bdf8',Neutral:'#6b7280',Fearful:'#a78bfa',Angry:'#ef4444',Surprised:'#ec4899'};
+var DEMO=[
+  {v:'Calm',w:'Calm',f:'Calm',vp:70,wp:80,fp:85,c:'Calm',cp:78,col:'#38bdf8'},
+  {v:'Calm',w:'Calm',f:'Fearful',vp:65,wp:70,fp:39,c:'Calm',cp:62,col:'#38bdf8'},
+  {v:'Calm',w:'Calm',f:'Fearful',vp:60,wp:72,fp:35,c:'Calm',cp:58,col:'#38bdf8'},
+  {v:'Calm',w:'Calm',f:'Angry',vp:68,wp:75,fp:42,c:'Calm',cp:65,col:'#38bdf8'},
+  {v:'Calm',w:'Calm',f:'Happy',vp:72,wp:80,fp:75,c:'Calm',cp:75,col:'#38bdf8'},
+  {v:'Happy',w:'Happy',f:'Surprised',vp:80,wp:78,fp:45,c:'Happy',cp:72,col:'#f59e0b'},
+  {v:'Happy',w:'Happy',f:'Happy',vp:85,wp:85,fp:80,c:'Happy',cp:82,col:'#f59e0b'},
+  {v:'Calm',w:'Calm',f:'Calm',vp:75,wp:73,fp:70,c:'Calm',cp:73,col:'#38bdf8'},
+];
+var SESSIONS=[
+  {id:1,type:'live',icon:'target',title:'Pitch Practice',date:'Today, 14:22',dur:'12m 34s',emotion:'Happy',ep:85,tone:'Happy',tp:90,words:'Happy',wp:80,face:'Surprised',fp:40},
+  {id:2,type:'offline',icon:'video',title:'Interview Recording Analysis',date:'Today, 11:05',dur:'1m 16s',emotion:'Calm',ep:78,tone:'Calm',tp:70,words:'Calm',wp:80,face:'Calm',fp:85},
+  {id:3,type:'live',icon:'chat',title:'Investor Q&A Session',date:'Yesterday, 16:40',dur:'8m 12s',emotion:'Neutral',ep:60,tone:'Calm',tp:65,words:'Neutral',wp:58,face:'Fearful',fp:35},
+  {id:4,type:'live',icon:'users',title:'Difficult Conversations',date:'Yesterday, 09:18',dur:'15m 02s',emotion:'Calm',ep:72,tone:'Calm',tp:75,words:'Calm',wp:70,face:'Calm',fp:70},
+  {id:5,type:'offline',icon:'video',title:'Presentation Review',date:'Mar 12, 17:30',dur:'4m 48s',emotion:'Happy',ep:80,tone:'Happy',tp:82,words:'Happy',wp:78,face:'Happy',fp:80},
+  {id:6,type:'live',icon:'heart',title:'Heart-to-Heart Check-in',date:'Mar 11, 20:10',dur:'22m 55s',emotion:'Neutral',ep:55,tone:'Neutral',tp:50,words:'Calm',wp:60,face:'Neutral',fp:55},
+];
+var FAQS=[
+  {tag:'Emotion AI',q:'How does Nearu detect emotions?',a:'Nearu analyzes three independent channels simultaneously: acoustic emotion (voice prosody — tone, pitch, pace, tremor), semantic emotion (meaning behind the words), and facial emotion (micro-expressions via camera frames). Each channel produces a label and confidence score, which are then fused into a single interpreted emotional state.'},
+  {tag:'Privacy',q:'Is my camera footage stored anywhere?',a:'No. Camera frames are processed locally for facial emotion extraction and immediately discarded. They are never stored on Nearu servers and never used for training. Only emotion labels and session transcripts are saved if you have conversation history enabled.'},
+  {tag:'Getting Started',q:'What is the difference between Live Session and Offline Analysis?',a:'Live Session enables real-time conversation with the Nearu avatar — emotion is analyzed as you speak. Offline Analysis lets you upload a pre-recorded video (an interview, presentation, or meeting recording) and get a full emotion timeline breakdown after processing.'},
+  {tag:'Emotion AI',q:'How accurate is the emotion detection?',a:'Nearu uses a confidence-weighted fusion approach. The system never reports neutral unless all available signals genuinely indicate neutral. When channels conflict (e.g. calm words but anxious voice), acoustic signals take priority — how you say something reveals more than what you say.'},
+  {tag:'Privacy',q:'What data is saved between sessions?',a:'If "Save conversation history" is enabled in Settings, Nearu saves transcripts and emotion summaries per session. Raw audio and video are never persisted. You can clear session data or all memory at any time from the Settings page.'},
+  {tag:'Getting Started',q:'What video formats are supported for Offline Analysis?',a:'MP4, MOV, and WebM files up to 500MB. For best results, use recordings with clear audio and good lighting. The analysis pipeline processes both audio tracks and visual frames automatically.'},
+  {tag:'Technical',q:'What is the processing latency for emotion analysis?',a:'For live sessions, emotion analysis runs in approximately 1.6–2.5 seconds end-to-end per turn. Offline video analysis time depends on video length — typically 10–30 seconds for videos under 5 minutes.'},
+  {tag:'Technical',q:'Can I use Nearu without a camera?',a:'Yes. The API is signal-agnostic. If no camera frames are provided, Nearu returns acoustic and semantic emotion only. Face signal is excluded entirely — the system never pads missing data with neutral defaults.'},
+];
+var ICON_SVG={
+  target:'<svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>',
+  video:'<svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="14" rx="2"/><path d="M7 21h10M12 17v4"/></svg>',
+  chat:'<svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
+  users:'<svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+  heart:'<svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>',
+};
+
+function doLogin(){document.getElementById('scr-login').classList.remove('active');}
+
+function go(name){
+  ['live','offline','sessions','faq','settings'].forEach(function(s){
+    document.getElementById('scr-'+s).classList.remove('active');
+    document.getElementById('nav-'+s).classList.remove('active');
+  });
+  document.getElementById('scr-'+name).classList.add('active');
+  document.getElementById('nav-'+name).classList.add('active');
+  if(name==='sessions')renderSessions();
+  if(name==='faq')renderFaq('');
+}
+
+/* LIVE */
+var ss='idle';
+function toggleSess(){if(ss==='idle')doListen();else if(ss==='listening')doThink();}
+function doListen(){
+  ss='listening';
+  document.getElementById('aring').className='ar ls';
+  document.getElementById('astat').innerHTML='<span class="dots"><span></span><span></span><span></span></span>Nearu is listening...';
+  document.getElementById('tbtn').className='tbtn rec';document.getElementById('tbtn-txt').textContent='Release to send';
+  document.getElementById('ldot').className='sd listening';document.getElementById('ltxt').textContent='Listening';
+  setSnapAn();setTimeout(doThink,2800);
+}
+function doThink(){
+  ss='thinking';
+  document.getElementById('aring').className='ar th';
+  document.getElementById('astat').textContent='Nearu is thinking...';
+  document.getElementById('tbtn').className='tbtn';document.getElementById('tbtn-txt').textContent='Talk to Nearu';
+  document.getElementById('ldot').className='sd thinking';document.getElementById('ltxt').textContent='Thinking';
+  setTimeout(doResp,2000);
+}
+function doResp(){
+  ss='responding';
+  document.getElementById('aring').className='ar rs';
+  document.getElementById('astat').innerHTML='<span class="dots"><span></span><span></span><span></span></span>Nearu is responding...';
+  document.getElementById('ldot').className='sd responding';document.getElementById('ltxt').textContent='Responding';
+  setSnap('Happy',85,'#f59e0b','Happy',90,'Happy',80,'Surprised',40,'#ec4899');
+  setEtag('Happy','#f59e0b',85);
+  addMsg('u','Hi Nearu, how are you?');
+  setTimeout(function(){
+    addMsg('n','I\'m doing wonderful, thank you for asking! It\'s great to hear from you. How is your day going so far?','How is your day going so far?');
+    ss='idle';document.getElementById('aring').className='ar';
+    document.getElementById('astat').textContent='Press Space to start';
+    document.getElementById('ldot').className='sd ready';document.getElementById('ltxt').textContent='Ready';
+  },3200);
+}
+function setSnapAn(){
+  document.getElementById('sm-e').textContent='Neutral';document.getElementById('sm-p').textContent='0%';
+  document.getElementById('sm-dot').style.background='#6b7280';
+  ['tone','words','face'].forEach(function(k){document.getElementById('bf-'+k).style.width='0%';document.getElementById('sv-'+k).innerHTML='<span style="font-style:italic;color:var(--t3)">Analyzing...</span>';});
+}
+function setSnap(e,p,c,t,tp,w,wp,f,fp,fc){
+  document.getElementById('sm-e').textContent=e;document.getElementById('sm-p').textContent=p+'%';document.getElementById('sm-dot').style.background=c;
+  var rows=[['tone',t,tp,EC[t]||c],['words',w,wp,EC[w]||c],['face',f,fp,fc||EC[f]||c]];
+  rows.forEach(function(r){
+    document.getElementById('bf-'+r[0]).style.width=r[2]+'%';document.getElementById('bf-'+r[0]).style.background=r[3];
+    document.getElementById('sv-'+r[0]).innerHTML='<span style="color:var(--t2);font-size:10px">'+r[1]+'</span>';
+  });
+}
+function setEtag(e,c,p){
+  var el=document.getElementById('etag-txt');el.textContent=e;
+  var rgb=h2r(c);el.style.cssText='border-radius:20px;padding:3px 11px;font-size:12px;font-weight:600;background:rgba('+rgb+',.15);color:'+c;
+  document.getElementById('econf').textContent=p+'% confidence';
+}
+function addMsg(role,txt,follow){
+  var m=document.getElementById('chatmsgs');var em=m.querySelector('.ce');if(em)em.remove();
+  var d=document.createElement('div');d.className='msg '+role;d.textContent=txt;
+  if(follow){var f=document.createElement('div');f.className='mf';f.textContent=follow;d.appendChild(f);}
+  m.appendChild(d);m.scrollTop=m.scrollHeight;
+}
+function h2r(h){var r=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(h);return r?parseInt(r[1],16)+','+parseInt(r[2],16)+','+parseInt(r[3],16):'255,255,255';}
+document.addEventListener('keydown',function(e){if(e.code==='Space'&&document.getElementById('scr-live').classList.contains('active')){e.preventDefault();toggleSess();}});
+
+/* OFFLINE */
+var curFile=null;
+function fileSelected(inp){if(inp.files&&inp.files[0])showPreview(inp.files[0].name,inp.files[0].size);}
+function loadDemo(){showPreview('demo_interview_recording.mp4',0);}
+function showPreview(name,size){
+  curFile=name;
+  document.getElementById('prev-name').textContent=name;
+  document.getElementById('prev-size').textContent=size?Math.round(size/1024/1024*10)/10+' MB':'76.5 MB (demo)';
+  document.getElementById('prev-card').classList.add('show');
+  document.getElementById('analyze-btn').classList.add('show');
+}
+function removeFile(){curFile=null;document.getElementById('prev-card').classList.remove('show');document.getElementById('analyze-btn').classList.remove('show');document.getElementById('finput').value='';}
+function startAnalysis(){
+  document.getElementById('up-card').style.display='none';
+  document.getElementById('proc').classList.add('show');
+  document.getElementById('rfn').textContent=curFile||'demo_video.mp4';
+  var ids=['ps1','ps2','ps3','ps4'],delays=[0,1400,2800,4000];
+  ids.forEach(function(s){document.getElementById(s).className='pstep wait';});
+  ids.forEach(function(s,i){
+    setTimeout(function(){document.getElementById(ids[i]).className='pstep';},delays[i]);
+    setTimeout(function(){document.getElementById(ids[i]).className='pstep done';},delays[i]+1100);
+  });
+  setTimeout(function(){document.getElementById('proc').classList.remove('show');showResults();},5400);
+}
+function showResults(){document.getElementById('ares').classList.add('show');renderEbars(DEMO[0]);drawChart();}
+function resetAnal(){
+  document.getElementById('ares').classList.remove('show');document.getElementById('proc').classList.remove('show');
+  document.getElementById('up-card').style.display='';removeFile();stopVid();vp=0;updTl();
+}
+function renderEbars(d){
+  var chs=[
+    {lbl:'Voice',ch:'VOICE',e:d.v,p:d.vp,col:EC[d.v]||'#6b7280'},
+    {lbl:'Words',ch:'WORDS',e:d.w,p:d.wp,col:EC[d.w]||'#6b7280'},
+    {lbl:'Face',ch:'FACE',e:d.f,p:d.fp,col:EC[d.f]||'#6b7280'},
+    {lbl:'Combined',ch:'COMBINED',e:d.c,p:d.cp,col:d.col||'#38bdf8'},
+  ];
+  var g=document.getElementById('ebgrid');g.innerHTML='';
+  chs.forEach(function(ch){
+    var col=document.createElement('div');col.className='ecol';
+    col.innerHTML='<div class="ewrap"><div class="efill" style="height:'+Math.round(ch.p)+'%;background:'+ch.col+'25;border:1.5px solid '+ch.col+'"></div></div>'+
+      '<span class="epct" style="color:'+ch.col+'">'+Math.round(ch.p)+'%</span>'+
+      '<span class="elabel">'+ch.e+'</span>'+
+      '<span class="echan">'+ch.ch+'</span>';
+    g.appendChild(col);
+  });
+}
+function drawChart(){
+  var cv=document.getElementById('echart');if(!cv)return;
+  var ctx=cv.getContext('2d');cv.width=cv.offsetWidth||580;cv.height=150;
+  var w=cv.width,h=cv.height,n=DEMO.length,sx=w/(n-1);
+  ctx.clearRect(0,0,w,h);
+  for(var i=0;i<n-1;i++){
+    var d0=DEMO[i],d1=DEMO[i+1],x0=i*sx,x1=(i+1)*sx,y0=h-(d0.cp/100)*(h-20)-10,y1=h-(d1.cp/100)*(h-20)-10,col=d0.col||'#38bdf8';
+    ctx.beginPath();ctx.moveTo(x0,y0);ctx.lineTo(x1,y1);ctx.strokeStyle=col;ctx.lineWidth=2;ctx.stroke();
+    ctx.beginPath();ctx.moveTo(x0,y0);ctx.lineTo(x1,y1);ctx.lineTo(x1,h);ctx.lineTo(x0,h);ctx.closePath();
+    var gr=ctx.createLinearGradient(0,0,0,h);gr.addColorStop(0,col+'55');gr.addColorStop(1,col+'05');ctx.fillStyle=gr;ctx.fill();
+  }
+  ctx.fillStyle='rgba(85,85,85,.9)';ctx.font='10px sans-serif';
+  ['0:00','0:20','0:40','1:00','1:16'].forEach(function(l,i){ctx.fillText(l,i*(w/4),h-2);});
+}
+var vp=0,vplaying=false,vint=null,vspeeds=[1,1.5,2,0.5],vspi=0,vdi=0;
+function togglePlay(){
+  vplaying=!vplaying;
+  document.getElementById('pico').innerHTML=vplaying?'<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>':'<polygon points="5 3 19 12 5 21 5 3"/>';
+  if(vplaying){vint=setInterval(function(){vp+=vspeeds[vspi]*100/760;if(vp>=100)vp=0;updTl();vdi=Math.min(Math.floor(vp/100*DEMO.length),DEMO.length-1);renderEbars(DEMO[vdi]);var s=Math.round(vp/100*76);document.getElementById('ets').textContent=Math.floor(s/60)+':'+(s%60<10?'0':'')+s%60;},100);}
+  else clearInterval(vint);
+}
+function stopVid(){vplaying=false;clearInterval(vint);document.getElementById('pico').innerHTML='<polygon points="5 3 19 12 5 21 5 3"/>';}
+function updTl(){var p=Math.round(vp);document.getElementById('tprog').style.width=p+'%';document.getElementById('tthumb').style.left=p+'%';var s=Math.round(vp/100*76);var ts=(Math.floor(s/60)<10?'0':'')+Math.floor(s/60)+':'+(s%60<10?'0':'')+s%60;document.getElementById('tdisplay').textContent=ts+' / 01:16';document.getElementById('vtovrl').textContent=ts.replace(/^0/,'')+' / 1:16';}
+function seekV(e){var b=document.getElementById('tbar'),r=b.getBoundingClientRect();vp=Math.max(0,Math.min(100,(e.clientX-r.left)/r.width*100));updTl();}
+function cycleSpd(){vspi=(vspi+1)%vspeeds.length;if(vplaying){clearInterval(vint);vplaying=false;togglePlay();}document.getElementById('spdbtn').textContent=vspeeds[vspi]+'x';}
+function setTab(t){document.getElementById('t-tl').classList.toggle('on',t==='tl');document.getElementById('t-pb').classList.toggle('on',t==='pb');}
+
+/* SESSIONS */
+function filterSess(btn,f){sessFilter=f;document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('on');});btn.classList.add('on');renderSessions();}
+function renderSessions(){
+  var list=document.getElementById('sess-list');list.innerHTML='';
+  var filtered=SESSIONS.filter(function(s){return sessFilter==='all'||s.type===sessFilter;});
+  if(!filtered.length){list.innerHTML='<div class="sess-empty"><svg width="32" height="32" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color:var(--t3)"><path d="M12 8v4l3 3m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg><span>No sessions found</span></div>';return;}
+  filtered.forEach(function(s){
+    var ec=EC[s.emotion]||'#6b7280';
+    var div=document.createElement('div');div.className='sess-card';
+    div.innerHTML='<div class="sess-top"><div class="sess-icon" style="background:'+ec+'20;color:'+ec+'">'+( ICON_SVG[s.icon]||ICON_SVG.target)+'</div><div class="sess-info"><div class="sess-title">'+s.title+'</div><div class="sess-date">'+s.date+'</div></div><span class="badge" style="background:'+ec+'18;color:'+ec+'">'+s.emotion+'</span><span class="sess-dur">'+s.dur+'</span></div>'+
+      '<div class="sess-bars">'+['Tone','Words','Face'].map(function(lbl,i){var keys=[['tone',s.tone,s.tp],['words',s.words,s.wp],['face',s.face,s.fp]];var kd=keys[i];var c=EC[kd[1]]||'#6b7280';return '<div class="sbar-item"><span class="sbar-lbl">'+lbl+'</span><div class="sbar-bg"><div class="sbar-fg" style="width:'+Math.round(kd[2])+'%;background:'+c+'"></div></div><span class="sbar-val">'+Math.round(kd[2])+'%</span></div>';}).join('')+'</div>';
+    list.appendChild(div);
+  });
+}
+
+/* FAQ */
+function renderFaq(q){
+  var list=document.getElementById('faq-list');list.innerHTML='';
+  var q2=q.toLowerCase();
+  var items=FAQS.filter(function(f){return !q2||(f.q+f.a+f.tag).toLowerCase().includes(q2);});
+  items.forEach(function(f,i){
+    var item=document.createElement('div');item.className='faq-item';
+    item.innerHTML='<div class="faq-q" onclick="this.parentElement.classList.toggle(\'open\')"><span><span class="faq-tag">'+f.tag+'</span>'+f.q+'</span><span class="faq-arrow">▼</span></div><div class="faq-a">'+f.a+'</div>';
+    list.appendChild(item);
+    if(i===0)item.classList.add('open');
+  });
+  if(!list.children.length)list.innerHTML='<div style="font-size:13px;color:var(--t3);padding:24px 0">No results for "'+q+'"</div>';
+}
+function filterFaq(v){renderFaq(v);}
+</script>
+</body>
+</html>

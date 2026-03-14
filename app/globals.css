@@ -1,0 +1,94 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg0: #0a0a0a;
+  --bg1: #111111;
+  --bg2: #181818;
+  --bg3: #222222;
+  --bg4: #2a2a2a;
+  --t1: #ffffff;
+  --t2: #a0a0a0;
+  --t3: #555555;
+  --acc: #62A8F7;
+  --acc2: #4a96e6;
+  --rs: 8px;
+  --rm: 12px;
+  --rl: 16px;
+  --happy: #f59e0b;
+  --neutral: #6b7280;
+  --fearful: #a78bfa;
+  --angry: #ef4444;
+  --calm: #38bdf8;
+  --surprised: #ec4899;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg0);
+  color: var(--t1);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 14px;
+  height: 100vh;
+  overflow: hidden;
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+@keyframes ring-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.03);
+  }
+}
+
+@keyframes dots-bounce {
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(2);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-pulse-dot {
+  animation: pulse-dot 1.5s infinite;
+}
+
+.animate-pulse-dot-fast {
+  animation: pulse-dot 1s infinite;
+}
+
+.animate-ring-pulse {
+  animation: ring-pulse 1.5s infinite;
+}
+
+.animate-spin-slow {
+  animation: spin 1s linear infinite;
+}
